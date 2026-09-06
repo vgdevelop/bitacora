@@ -80,9 +80,24 @@ PostgreSQL y Redis usan volúmenes Docker. `docker compose down` conserva los da
 
 ## Copia de seguridad
 
+Los respaldos contienen datos operativos y credenciales cifradas, por lo que
+`database/backups/` está excluido de Git. Para crear un respaldo local en formato
+custom de PostgreSQL:
+
 ```bash
-docker compose exec -T postgres sh -c 'pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"' > bitacora-backup.sql
+mkdir -p database/backups
+docker compose exec -T postgres sh -c 'pg_dump -Fc -U "$POSTGRES_USER" "$POSTGRES_DB"' > database/backups/bitacora.dump
 ```
+
+Para restaurarlo sobre una base vacía:
+
+```bash
+docker compose exec -T postgres sh -c 'pg_restore --clean --if-exists -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < database/backups/bitacora.dump
+```
+
+El seeder incluye la configuración base de departamentos, equipos, 10
+contenedores de floración, 4 salas y sus dispositivos. No incluye usuarios
+operativos ni registros de trabajo.
 
 ## Stack
 

@@ -1,3 +1,45 @@
 <?php
-namespace App\Http\Controllers; use Illuminate\Http\RedirectResponse; use Illuminate\Http\Request; use Illuminate\Support\Facades\Auth; use Illuminate\View\View;
-class AuthController extends Controller {public function showLogin():View{return view('auth.login');}public function showRegister():View{return view('auth.register');}public function login(Request $r):RedirectResponse{$c=$r->validate(['email'=>['required','email'],'password'=>['required','string']]);if(!Auth::attempt(['email'=>$c['email'],'password'=>$c['password'],'active'=>true],$r->boolean('remember')))return back()->withErrors(['email'=>'Las credenciales no son correctas o la cuenta está desactivada.'])->onlyInput('email');$r->session()->regenerate();return redirect()->intended(route('logbook.index'));}public function register(Request $r):RedirectResponse{abort(404);}public function logout(Request $r):RedirectResponse{Auth::logout();$r->session()->invalidate();$r->session()->regenerateToken();return redirect()->route('login');}}
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+
+class AuthController extends Controller
+{
+    public function showLogin(): View
+    {
+        return view('auth.login');
+    }
+
+    public function showRegister(): View
+    {
+        return view('auth.register');
+    }
+
+    public function login(Request $r): RedirectResponse
+    {
+        $c = $r->validate(['email' => ['required', 'email'], 'password' => ['required', 'string']]);
+        if (! Auth::attempt(['email' => $c['email'], 'password' => $c['password'], 'active' => true], $r->boolean('remember'))) {
+            return back()->withErrors(['email' => 'Las credenciales no son correctas o la cuenta está desactivada.'])->onlyInput('email');
+        }$r->session()->regenerate();
+
+        return redirect()->intended(route('logbook.index'));
+    }
+
+    public function register(Request $r): RedirectResponse
+    {
+        abort(404);
+    }
+
+    public function logout(Request $r): RedirectResponse
+    {
+        Auth::logout();
+        $r->session()->invalidate();
+        $r->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+}
