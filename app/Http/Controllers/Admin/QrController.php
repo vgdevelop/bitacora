@@ -1,0 +1,4 @@
+<?php
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller; use App\Models\Asset; use Endroid\QrCode\Encoding\Encoding; use Endroid\QrCode\ErrorCorrectionLevel; use Endroid\QrCode\QrCode; use Endroid\QrCode\Writer\SvgWriter; use Illuminate\Http\Response; use Illuminate\View\View;
+class QrController extends Controller {public function index():View{return view('admin.qr.index',['assets'=>Asset::with('location')->orderBy('location_id')->orderBy('name')->get()]);}public function image(Asset $asset):Response{$url=route('operator.asset',$asset);$qr=new QrCode(data:$url,encoding:new Encoding('UTF-8'),errorCorrectionLevel:ErrorCorrectionLevel::Medium,size:360,margin:18);$result=(new SvgWriter)->write($qr);return response($result->getString(),200,['Content-Type'=>$result->getMimeType(),'Content-Disposition'=>'inline; filename="'.$asset->code.'.svg"']);}}

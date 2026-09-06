@@ -1,0 +1,48 @@
+<?php
+
+return [
+    'accepted' => 'El campo :attribute debe ser aceptado.',
+    'array' => 'El campo :attribute debe ser una lista válida.',
+    'confirmed' => 'La confirmación de :attribute no coincide.',
+    'email' => 'El campo :attribute debe ser una dirección de correo válida.',
+    'exists' => 'El valor seleccionado para :attribute no es válido.',
+    'image' => 'El archivo :attribute debe ser una imagen válida.',
+    'in' => 'El valor seleccionado para :attribute no es válido.',
+    'integer' => 'El campo :attribute debe ser un número entero.',
+    'max' => [
+        'array' => 'El campo :attribute no puede contener más de :max elementos.',
+        'file' => 'El archivo :attribute no puede superar :max kilobytes.',
+        'numeric' => 'El campo :attribute no puede ser mayor que :max.',
+        'string' => 'El campo :attribute no puede tener más de :max caracteres.',
+    ],
+    'min' => [
+        'array' => 'El campo :attribute debe contener al menos :min elementos.',
+        'file' => 'El archivo :attribute debe tener al menos :min kilobytes.',
+        'numeric' => 'El campo :attribute debe ser como mínimo :min.',
+        'string' => 'El campo :attribute debe tener al menos :min caracteres.',
+    ],
+    'numeric' => 'El campo :attribute debe ser un número.',
+    'required' => 'El campo :attribute es obligatorio.',
+    'string' => 'El campo :attribute debe ser texto.',
+    'unique' => 'El valor de :attribute ya está registrado.',
+
+    'attributes' => [
+        'name' => 'nombre',
+        'email' => 'correo electrónico',
+        'password' => 'contraseña',
+        'password_confirmation' => 'confirmación de contraseña',
+        'first_name' => 'nombre',
+        'last_name' => 'apellido',
+        'document' => 'documento',
+        'phone' => 'teléfono',
+        'state' => 'departamento',
+        'city' => 'ciudad',
+        'address' => 'dirección',
+        'shipping_preference' => 'método de envío',
+        'subject' => 'asunto',
+        'message' => 'mensaje',
+        'image' => 'imagen',
+        'price' => 'precio',
+        'stock' => 'stock',
+    ],
+];

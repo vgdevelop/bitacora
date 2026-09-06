@@ -1,0 +1,12 @@
+<?php
+namespace App\Http\Controllers;
+use App\Models\Asset; use App\Models\Location; use App\Models\WorkLog; use App\Models\WorkTeam; use Illuminate\Http\RedirectResponse; use Illuminate\Http\Request; use Illuminate\Support\Facades\DB; use Illuminate\Support\Str; use Illuminate\Validation\Rule; use Illuminate\View\View;
+class WorkLogController extends Controller {
+ public function create():View{return view('logbook.create',$this->formData());}
+ public function store(Request $request):RedirectResponse{$data=$this->validated($request);$this->validateAssetLocation($data);$log=DB::transaction(fn()=>WorkLog::create($data+['number'=>'BIT-'.now()->format('Ymd').'-'.Str::upper(Str::random(6)),'created_by'=>$request->user()->id]));return redirect()->route('logbook.show',$log)->with('success','Trabajo registrado en la bitácora.');}
+ public function edit(WorkLog $workLog):View{return view('logbook.edit',$this->formData()+compact('workLog'));}
+ public function update(Request $request,WorkLog $workLog):RedirectResponse{$data=$this->validated($request);$this->validateAssetLocation($data);$workLog->update($data);return redirect()->route('logbook.show',$workLog)->with('success','Registro actualizado.');}
+ private function validated(Request $request):array{return $request->validate(['work_team_id'=>['required','exists:work_teams,id'],'location_id'=>['required','exists:locations,id'],'asset_id'=>['nullable','exists:assets,id'],'title'=>['nullable','string','max:255'],'work_type'=>['required',Rule::in(array_keys(WorkLog::TYPES))],'priority'=>['required',Rule::in(array_keys(WorkLog::PRIORITIES))],'status'=>['required',Rule::in(array_keys(WorkLog::STATUSES))],'description'=>['nullable','string','max:5000'],'result'=>['nullable','string','max:5000'],'observations'=>['nullable','string','max:5000'],'started_at'=>['required','date'],'finished_at'=>['nullable','date','after_or_equal:started_at'],'next_action_at'=>['nullable','date','after:started_at']]);}
+ private function validateAssetLocation(array $data):void{$asset=!empty($data['asset_id'])?Asset::findOrFail($data['asset_id']):null;abort_if($asset&&$asset->location_id!==(int)$data['location_id'],422,'El equipo no pertenece a la ubicación seleccionada.');}
+ private function formData():array{return ['teams'=>WorkTeam::with('department')->where('active',true)->orderBy('name')->get(),'locations'=>Location::with(['assets'=>fn($q)=>$q->orderBy('name')])->where('active',true)->orderBy('name')->get(),'types'=>WorkLog::TYPES,'priorities'=>WorkLog::PRIORITIES,'statuses'=>WorkLog::STATUSES];}
+}
