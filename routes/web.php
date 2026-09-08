@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\PlantManagementController;
 use App\Http\Controllers\Admin\QrController;
+use App\Http\Controllers\Admin\TaskConfigurationController;
 use App\Http\Controllers\AssetWorkController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LocationController;
@@ -42,6 +43,13 @@ Route::middleware('auth')->group(function () {
         Route::delete('/usuarios/{user}', [PlantManagementController::class, 'destroyUser'])->name('users.destroy');
         Route::get('/codigos-qr', [QrController::class, 'index'])->name('qr.index');
         Route::get('/codigos-qr/{asset}.svg', [QrController::class, 'image'])->name('qr.image');
+        Route::get('/configuracion-tareas', [TaskConfigurationController::class, 'index'])->name('tasks.index');
+        Route::post('/tipos-tarea', [TaskConfigurationController::class, 'storeType'])->name('task-types.store');
+        Route::put('/tipos-tarea/{taskType}', [TaskConfigurationController::class, 'updateType'])->name('task-types.update');
+        Route::delete('/tipos-tarea/{taskType}', [TaskConfigurationController::class, 'destroyType'])->name('task-types.destroy');
+        Route::post('/tipos-tarea/{taskType}/campos', [TaskConfigurationController::class, 'storeInput'])->name('task-inputs.store');
+        Route::put('/tipos-tarea/{taskType}/campos/{taskInput}', [TaskConfigurationController::class, 'updateInput'])->name('task-inputs.update');
+        Route::delete('/tipos-tarea/{taskType}/campos/{taskInput}', [TaskConfigurationController::class, 'destroyInput'])->name('task-inputs.destroy');
         Route::get('/bitacora/nuevo', [WorkLogController::class, 'create'])->name('logbook.create');
         Route::post('/bitacora', [WorkLogController::class, 'store'])->middleware('throttle:30,1')->name('logbook.store');
         Route::get('/bitacora/{workLog}/editar', [WorkLogController::class, 'edit'])->name('logbook.edit');

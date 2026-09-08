@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WorkLog extends Model
 {
@@ -13,7 +14,7 @@ class WorkLog extends Model
 
     public const PRIORITIES = ['low' => 'Baja', 'normal' => 'Normal', 'high' => 'Alta', 'critical' => 'Crítica'];
 
-    protected $fillable = ['number', 'created_by', 'work_team_id', 'location_id', 'asset_id', 'title', 'work_type', 'priority', 'status', 'description', 'result', 'observations', 'started_at', 'finished_at', 'next_action_at', 'closed_by'];
+    protected $fillable = ['number', 'created_by', 'work_team_id', 'location_id', 'asset_id', 'title', 'task_type_id', 'task_type_name', 'peo_reference', 'work_type', 'priority', 'status', 'description', 'result', 'observations', 'started_at', 'finished_at', 'next_action_at', 'closed_by'];
 
     protected function casts(): array
     {
@@ -45,6 +46,16 @@ class WorkLog extends Model
         return $this->belongsTo(Asset::class);
     }
 
+    public function taskType(): BelongsTo
+    {
+        return $this->belongsTo(TaskType::class);
+    }
+
+    public function inputValues(): HasMany
+    {
+        return $this->hasMany(WorkLogInput::class)->orderBy('id');
+    }
+
     public function getStatusLabelAttribute(): string
     {
         return self::STATUSES[$this->status] ?? $this->status;
@@ -52,7 +63,7 @@ class WorkLog extends Model
 
     public function getTypeLabelAttribute(): string
     {
-        return self::TYPES[$this->work_type] ?? $this->work_type;
+        return $this->task_type_name ?: (self::TYPES[$this->work_type] ?? $this->work_type);
     }
 
     public function getPriorityLabelAttribute(): string

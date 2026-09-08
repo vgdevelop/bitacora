@@ -26,6 +26,6 @@ class LogbookController extends Controller
 
     public function show(WorkLog $workLog): View
     {
-        return view('logbook.show', ['workLog' => $workLog->load(['team.department', 'location', 'asset', 'author'])]);
+        return view('logbook.show', ['workLog' => $workLog->load(['team.department', 'location', 'asset', 'author','inputValues'])]);
     }
 }
