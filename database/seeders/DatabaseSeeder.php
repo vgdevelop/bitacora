@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(TaskExamplesSeeder::class);
+
         $production = Department::updateOrCreate(
             ['code' => 'PRODUCCION'],
             ['name' => 'Producción', 'description' => 'Departamento de Producción', 'active' => true],
